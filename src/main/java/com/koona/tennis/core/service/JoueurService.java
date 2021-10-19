@@ -66,13 +66,14 @@ public class JoueurService {
 
     public void rename(Long id, String name) {
 //        joueurRepositoryImpl.rename(id, name);
+        Joueur joueur = getJoueur(id);
         Session session = null;
         Transaction tx = null;
         try {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
-            Joueur joueur = joueurRepositoryImpl.readOne(id);
             joueur.setNom(name);
+            session.merge(joueur);
             tx.commit();
         } catch (Throwable t) {
             t.printStackTrace();
