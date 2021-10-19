@@ -14,7 +14,7 @@ import org.hibernate.Transaction;
  * @author Steve KOUNA
  */
 public class JoueurRepositoryImpl {
-    
+
     public void rename(Long id, String newName) {
         Joueur joueur = new Joueur();
         Session session = null;
@@ -23,19 +23,17 @@ public class JoueurRepositoryImpl {
             session = HibernateUtil.getSessionFactory().openSession();
             joueur = session.get(Joueur.class, id);
             joueur.setNom(newName);
-            
+
             tx = session.beginTransaction();
             session.merge(joueur);
             tx.commit();
             System.out.println("Nom du Joueur modifie");
-        } 
-        catch (Throwable t) {
+        } catch (Throwable t) {
             t.printStackTrace();
             if (tx != null) {
                 tx.rollback();
             }
-        } 
-        finally {
+        } finally {
             if (session != null) {
                 session.close();
             }
@@ -45,26 +43,12 @@ public class JoueurRepositoryImpl {
 
     public void create(Joueur joueur) {
         Session session = null;
-        Transaction tx = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-            session.persist(joueur);
-            tx.commit();
 
-            System.out.println("Joueur cree : " + joueur.getId());
-        } catch (Throwable t) {
-            t.printStackTrace();
-            if (tx != null) {
-                tx.rollback();
-            }
-            
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        session.persist(joueur);
 
+        System.out.println("Joueur cree : " + joueur.getId());
     }
 
     public void update(Joueur joueur, Long id) {
@@ -98,21 +82,12 @@ public class JoueurRepositoryImpl {
     public Joueur readOne(Long id) {
         Joueur joueur = new Joueur();
         Session session = null;
-        
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            joueur = session.get(Joueur.class, id);
 
-            System.out.println("Joueur modifie");
-        } 
-        catch (Throwable t) {
-            t.printStackTrace();
-        } 
-        finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        joueur = session.get(Joueur.class, id);
+
+        System.out.println("Joueur modifie");
+
         return joueur;
     }
 
