@@ -14,6 +14,34 @@ import org.hibernate.Transaction;
  * @author Steve KOUNA
  */
 public class JoueurRepositoryImpl {
+    
+    public void rename(Long id, String newName) {
+        Joueur joueur = new Joueur();
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            joueur = session.get(Joueur.class, id);
+            joueur.setNom(newName);
+            
+            tx = session.beginTransaction();
+            session.merge(joueur);
+            tx.commit();
+            System.out.println("Nom du Joueur modifie");
+        } 
+        catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+        } 
+        finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+//        return joueur;
+    }
 
     public void create(Joueur joueur) {
         Session session = null;
@@ -69,43 +97,18 @@ public class JoueurRepositoryImpl {
 
     public Joueur readOne(Long id) {
         Joueur joueur = new Joueur();
-//        Connection connection = null;
         Session session = null;
+        
         try {
-//            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-//            connection = dataSource.getConnection();
-//
-//            String sqls = "SELECT * FROM JOUEUR WHERE ID = ?";
-//            PreparedStatement preparedStatement = connection.prepareStatement(sqls);
-//            preparedStatement.setLong(1, id);
-//            ResultSet rs = preparedStatement.executeQuery();
-//
-//            if (rs.next()) {
-////                while (rs.next()) {
-//                joueur.setNom(rs.getString("NOM"));
-//                joueur.setPrenom(rs.getString("PRENOM"));
-//                joueur.setSexe(rs.getString("SEXE").charAt(0));
-//                joueur.setId(rs.getLong("ID"));
-////                }
-//            }
-              
             session = HibernateUtil.getSessionFactory().openSession();
             joueur = session.get(Joueur.class, id);
 
             System.out.println("Joueur modifie");
         } 
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        } 
+        catch (Throwable t) {
+            t.printStackTrace();
+        } 
         finally {
-//            try {
-//                if (connection != null) {
-//                    connection.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-
             if (session != null) {
                 session.close();
             }

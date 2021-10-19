@@ -26,4 +26,8 @@ public class JoueurService {
         
         return joueur;
     }
+    
+    public void rename(Long id, String name){
+        joueurRepositoryImpl.rename(id, name);
+    }
 }
