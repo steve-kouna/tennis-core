@@ -1,7 +1,10 @@
 package com.koona.tennis.core.service;
 
+import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.entity.Tournoi;
 import com.koona.tennis.core.repository.TournoiRepositoryImpl;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 /**
@@ -25,4 +28,27 @@ public class TournoiService {
     public void createTournoi(Tournoi tournoi) {
         tournoiRepositoryImpl.create(tournoi);
     }
+    
+    public void deleteTournoi(Long id) {
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            tournoiRepositoryImpl.delete(id);
+            tx.commit();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
 }

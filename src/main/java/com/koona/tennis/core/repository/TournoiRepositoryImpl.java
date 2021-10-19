@@ -41,22 +41,8 @@ public class TournoiRepositoryImpl {
     public Tournoi readOne(Long id) {
         Tournoi tournoi = new Tournoi();
         
-//        Connection connection = null;
         Session session = null;
         try {
-//            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-//            connection = dataSource.getConnection();
-//
-//            String sqls = "SELECT * FROM TOURNOI WHERE ID = ?";
-//            PreparedStatement preparedStatement = connection.prepareStatement(sqls);
-//            preparedStatement.setLong(1, id);
-//            ResultSet rs = preparedStatement.executeQuery();
-//
-//            if (rs.next()) {
-//                tournoi.setNom(rs.getString("NOM"));
-//                tournoi.setCode(rs.getString("CODE"));
-//                tournoi.setId(rs.getLong("ID"));
-//            }
             session = HibernateUtil.getSessionFactory().openSession();
             tournoi = session.get(Tournoi.class, id);
             System.out.println("Tournoi lu");
@@ -141,27 +127,11 @@ public class TournoiRepositoryImpl {
     }
     
     public void delete(Long id) {
-        Connection connection = null;
-        try {
-            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-            connection = dataSource.getConnection();
-
-            String sqls = "DELETE FROM TOURNOI WHERE ID = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sqls);
-            preparedStatement.setLong(1, id);
-            int rs = preparedStatement.executeUpdate();
-
-            System.out.println("Tournoi supprime : " + rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Tournoi tournoi = new Tournoi();
+        tournoi.setId(id);
+        
+        Session session = null;
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        session.delete(tournoi);
     }
 }
