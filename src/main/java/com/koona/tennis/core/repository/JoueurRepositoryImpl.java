@@ -80,40 +80,23 @@ public class JoueurRepositoryImpl {
     }
 
     public Joueur readOne(Long id) {
-        Joueur joueur = new Joueur();
+        Joueur joueur = null;
         Session session = null;
 
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         joueur = session.get(Joueur.class, id);
 
-        System.out.println("Joueur modifie");
+        System.out.println("Joueur lu");
 
         return joueur;
     }
 
     public void delete(Long id) {
-        Connection connection = null;
-        try {
-            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-            connection = dataSource.getConnection();
-
-            String sqls = "DELETE FROM JOUEUR WHERE ID = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sqls);
-            preparedStatement.setLong(1, id);
-            int rs = preparedStatement.executeUpdate();
-
-            System.out.println("Joueur supprime : " + rs);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Joueur joueur = null;
+        Session session = null;
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        joueur = readOne(id);
+        session.delete(joueur);
     }
 
     public List<Joueur> readAll() {

@@ -111,4 +111,27 @@ public class JoueurService {
             }
         }
     }
+    
+    public void deleteJoueur(Long id) {
+        Session session = null;
+        Transaction tx = null;
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            joueurRepositoryImpl.delete(id);
+            tx.commit();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+
 }
