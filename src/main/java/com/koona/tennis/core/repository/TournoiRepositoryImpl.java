@@ -7,6 +7,7 @@ import java.sql.*;
 import java.util.*;
 import javax.sql.DataSource;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -15,33 +16,24 @@ import org.hibernate.Session;
 public class TournoiRepositoryImpl {
     
     public void create(Tournoi tournoi) {
-        Connection connection = null;
+        Session session = null;
+        Transaction tx = null;
         try {
-            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-            connection = dataSource.getConnection();
+            session = HibernateUtil.getSessionFactory().openSession();
+            tx = session.beginTransaction();
+            session.persist(tournoi);
+            tx.commit();
 
-            String sqls = "INSERT INTO TOURNOI (NOM, CODE) VALUES (?,?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sqls, Statement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString(1, tournoi.getNom());
-            preparedStatement.setString(2, tournoi.getCode());
-
-            int nbre = preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            
-            if (rs.next()) {
-                tournoi.setId(rs.getLong(1));
+            System.out.println("Joueur cree : " + tournoi.getId());
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
             }
-
-            System.out.println("Tournoi cree : " + nbre);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            
         } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (session != null) {
+                session.close();
             }
         }
     }
