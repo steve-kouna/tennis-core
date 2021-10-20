@@ -1,13 +1,31 @@
 package com.koona.tennis.core.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Transient;
+import org.hibernate.annotations.Type;
+
 /**
  *
  * @author Steve KOUNA
  */
+@Entity
 public class Epreuve {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Type(type="short")
     private short annee;
+    
+    @Column(name="type_epreuve")
     private Character typeEpreuve;
+    
+    @Transient
     private Tournoi tournoi;
 
     public Long getId() {

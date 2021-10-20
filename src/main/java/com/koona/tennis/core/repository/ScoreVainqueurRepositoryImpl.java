@@ -1,9 +1,11 @@
 package com.koona.tennis.core.repository;
 
 import com.koona.tennis.core.DataSourceProvider;
+import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.entity.ScoreVainqueur;
 import java.sql.*;
 import javax.sql.*;
+import org.hibernate.Session;
 
 /**
  *
@@ -67,5 +69,15 @@ public class ScoreVainqueurRepositoryImpl {
             }
         }
 
+    }
+    
+    public ScoreVainqueur getById(long id) {
+        ScoreVainqueur scoreVainqueur = null;
+        Session session = null;
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        scoreVainqueur = session.get(ScoreVainqueur.class, id);
+        
+        System.out.println("Score lu !");
+        return scoreVainqueur;
     }
 }
