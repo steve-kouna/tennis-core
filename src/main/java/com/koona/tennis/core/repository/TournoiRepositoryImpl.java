@@ -2,6 +2,7 @@ package com.koona.tennis.core.repository;
 
 import com.koona.tennis.core.DataSourceProvider;
 import com.koona.tennis.core.HibernateUtil;
+import com.koona.tennis.core.dto.TournoiDto;
 import com.koona.tennis.core.entity.Tournoi;
 import java.sql.*;
 import java.util.*;
@@ -14,58 +15,34 @@ import org.hibernate.Transaction;
  * @author Steve KOUNA
  */
 public class TournoiRepositoryImpl {
-    
+
     public void create(Tournoi tournoi) {
         Session session = null;
         Transaction tx = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tx = session.beginTransaction();
-            session.persist(tournoi);
-            tx.commit();
 
-            System.out.println("Joueur cree : " + tournoi.getId());
-        } catch (Throwable t) {
-            t.printStackTrace();
-            if (tx != null) {
-                tx.rollback();
-            }
-            
-        } finally {
-            if (session != null) {
-                session.close();
-            }
-        }
+        session = HibernateUtil.getSessionFactory().openSession();
+        tx = session.beginTransaction();
+        session.persist(tournoi);
+        tx.commit();
+
+        System.out.println("Joueur cree : " + tournoi.getId());
     }
-    
+
     public Tournoi readOne(Long id) {
-        Tournoi tournoi = new Tournoi();
-        
+        Tournoi tournoi = null;
+
         Session session = null;
-        try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            tournoi = session.get(Tournoi.class, id);
-            System.out.println("Tournoi lu");
-        } 
-//        catch (SQLException e) {
-//            e.printStackTrace();
-//        } 
-        finally {
-//            try {
-//                if (connection != null) {
-//                    connection.close();
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-        }
-        
+
+        session = HibernateUtil.getSessionFactory().openSession();
+        tournoi = session.get(Tournoi.class, id);
+        System.out.println("Tournoi lu");
+
         return tournoi;
     }
-    
+
     public List<Tournoi> readAll() {
         List<Tournoi> tournois = new ArrayList();
-        
+
         Connection connection = null;
         try {
             DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
@@ -95,10 +72,10 @@ public class TournoiRepositoryImpl {
                 e.printStackTrace();
             }
         }
-        
+
         return tournois;
     }
-    
+
     public void update(Tournoi tournoi, Long id) {
         Connection connection = null;
         try {
@@ -125,11 +102,11 @@ public class TournoiRepositoryImpl {
             }
         }
     }
-    
+
     public void delete(Long id) {
         Tournoi tournoi = new Tournoi();
         tournoi.setId(id);
-        
+
         Session session = null;
         session = HibernateUtil.getSessionFactory().getCurrentSession();
         session.delete(tournoi);

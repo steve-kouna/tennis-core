@@ -1,9 +1,11 @@
 package com.koona.tennis.core.repository;
 
 import com.koona.tennis.core.DataSourceProvider;
+import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.entity.MatchTennis;
 import java.sql.*;
 import javax.sql.*;
+import org.hibernate.Session;
 
 /**
  *
@@ -43,6 +45,16 @@ public class MatchRepositoryImpl {
             }
         }
 
+    }
+    
+    public MatchTennis getById (Long id) {
+        MatchTennis matchTennis = new MatchTennis();
+        Session session = null;
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        matchTennis = session.get(MatchTennis.class, id);
+        System.out.println("Match de Tennis lu");
+        
+        return matchTennis;
     }
 
 }
