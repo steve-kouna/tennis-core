@@ -11,6 +11,7 @@ import com.koona.tennis.core.dto.JoueurDto;
 import com.koona.tennis.core.dto.MatchTennisDto;
 import com.koona.tennis.core.dto.ScoreVainqueurFullDto;
 import com.koona.tennis.core.dto.TournoiDto;
+import com.koona.tennis.core.entity.Joueur;
 import com.koona.tennis.core.entity.MatchTennis;
 import com.koona.tennis.core.repository.MatchRepositoryImpl;
 import com.koona.tennis.core.repository.ScoreVainqueurRepositoryImpl;
@@ -107,5 +108,42 @@ public class MatchService {
         }
         
     return matchTennisDto;
+    }
+    
+    public void tapisVert(Long id) {
+        Session session = null;
+        Transaction tx = null;
+        MatchTennis matchTennis = null;
+//        MatchTennisDto matchTennisDto = new MatchTennisDto();
+        
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            
+            matchTennis = matchRepositoryImpl.getById(id);
+            
+            Joueur ancienVainqueur = matchTennis.getVainqueur();
+            matchTennis.setVainqueur(matchTennis.getFinaliste());
+            matchTennis.setFinaliste(ancienVainqueur);
+            
+            matchTennis.getScore().setSet1((byte)0);
+            matchTennis.getScore().setSet2((byte)0);
+            matchTennis.getScore().setSet3((byte)0);
+            matchTennis.getScore().setSet4((byte)0);
+            matchTennis.getScore().setSet5((byte)0);
+            
+            tx.commit();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
     }
 }
