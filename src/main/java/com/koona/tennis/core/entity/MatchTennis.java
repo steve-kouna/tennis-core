@@ -35,7 +35,7 @@ public class MatchTennis {
     @JoinColumn(name = "id_finaliste")
     private Joueur finaliste;
     
-    @Transient
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
     private ScoreVainqueur score;
 
     public Long getId() {

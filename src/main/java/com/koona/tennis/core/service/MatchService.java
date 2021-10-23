@@ -9,6 +9,7 @@ import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.dto.EpreuveFullDto;
 import com.koona.tennis.core.dto.JoueurDto;
 import com.koona.tennis.core.dto.MatchTennisDto;
+import com.koona.tennis.core.dto.ScoreVainqueurFullDto;
 import com.koona.tennis.core.dto.TournoiDto;
 import com.koona.tennis.core.entity.MatchTennis;
 import com.koona.tennis.core.repository.MatchRepositoryImpl;
@@ -78,7 +79,19 @@ public class MatchService {
             matchTennisDto.setVainqueur(vainqueur);
             matchTennisDto.setFinaliste(finaliste);
             matchTennisDto.setEpreuve(epreuveDto);
+            
+            ScoreVainqueurFullDto scoreVainqueurFullDto = new ScoreVainqueurFullDto();
+            
+            scoreVainqueurFullDto.setId(matchTennis.getScore().getId());
+            scoreVainqueurFullDto.setSet1(matchTennis.getScore().getSet1());
+            scoreVainqueurFullDto.setSet2(matchTennis.getScore().getSet2());
+            scoreVainqueurFullDto.setSet3(matchTennis.getScore().getSet3());
+            scoreVainqueurFullDto.setSet4(matchTennis.getScore().getSet4());
+            scoreVainqueurFullDto.setSet5(matchTennis.getScore().getSet5());
                     
+            matchTennisDto.setScore(scoreVainqueurFullDto);
+            scoreVainqueurFullDto.setMatch(matchTennisDto);
+            
             tx.commit();
 
         } catch (Throwable t) {

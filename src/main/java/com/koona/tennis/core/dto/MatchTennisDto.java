@@ -14,6 +14,7 @@ public class MatchTennisDto {
     private JoueurDto finaliste;
     
     private EpreuveFullDto epreuve;
+    private ScoreVainqueurFullDto score;
     
 
     public Long getId() {
@@ -46,6 +47,14 @@ public class MatchTennisDto {
 
     public void setEpreuve(EpreuveFullDto epreuve) {
         this.epreuve = epreuve;
+    }
+
+    public ScoreVainqueurFullDto getScore() {
+        return score;
+    }
+
+    public void setScore(ScoreVainqueurFullDto score) {
+        this.score = score;
     }
     
 }
