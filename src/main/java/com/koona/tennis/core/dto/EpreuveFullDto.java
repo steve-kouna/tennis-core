@@ -1,6 +1,6 @@
 package com.koona.tennis.core.dto;
 
-import com.koona.tennis.core.entity.Epreuve;
+import java.util.Set;
 
 /**
  *
@@ -15,6 +15,8 @@ public class EpreuveFullDto{
     private Character typeEpreuve;
 
     private TournoiDto tournoi;
+    
+    private Set<JoueurDto> participants;
 
     public Long getId() {
         return id;
@@ -46,6 +48,14 @@ public class EpreuveFullDto{
 
     public void setTournoi(TournoiDto tournoi) {
         this.tournoi = tournoi;
+    }
+
+    public Set<JoueurDto> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<JoueurDto> participants) {
+        this.participants = participants;
     }
     
     

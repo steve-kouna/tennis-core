@@ -1,5 +1,6 @@
 package com.koona.tennis.core.entity;
 
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Type;
@@ -31,6 +34,18 @@ public class Epreuve {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_tournoi")
     private Tournoi tournoi;
+    
+    @ManyToMany
+    @JoinTable(
+            name = "participants",
+            joinColumns = {
+                @JoinColumn(name = "id_epreuve")
+            },
+            inverseJoinColumns = {
+                @JoinColumn(name = "id_joueur")
+            }
+    )
+    private Set<Joueur> participants;
 
     public Long getId() {
         return id;
@@ -62,6 +77,14 @@ public class Epreuve {
 
     public void setAnnee(short annee) {
         this.annee = annee;
+    }
+
+    public Set<Joueur> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(Set<Joueur> participants) {
+        this.participants = participants;
     }
     
     
