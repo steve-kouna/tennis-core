@@ -13,6 +13,9 @@ import com.koona.tennis.core.dto.ScoreVainqueurFullDto;
 import com.koona.tennis.core.dto.TournoiDto;
 import com.koona.tennis.core.entity.Joueur;
 import com.koona.tennis.core.entity.MatchTennis;
+import com.koona.tennis.core.entity.ScoreVainqueur;
+import com.koona.tennis.core.repository.EpreuveRepositoryImpl;
+import com.koona.tennis.core.repository.JoueurRepositoryImpl;
 import com.koona.tennis.core.repository.MatchRepositoryImpl;
 import com.koona.tennis.core.repository.ScoreVainqueurRepositoryImpl;
 import org.hibernate.Session;
@@ -26,10 +29,14 @@ public class MatchService {
     
     private ScoreVainqueurRepositoryImpl scoreVainqueurRepositoryImpl;
     private MatchRepositoryImpl matchRepositoryImpl; 
+    private EpreuveRepositoryImpl epreuveRepositoryImpl;
+    private JoueurRepositoryImpl joueurRepositoryImpl;
 
     public MatchService() {
         this.scoreVainqueurRepositoryImpl = new ScoreVainqueurRepositoryImpl();
         this.matchRepositoryImpl = new MatchRepositoryImpl(); 
+        this.epreuveRepositoryImpl = new EpreuveRepositoryImpl();
+        this.joueurRepositoryImpl = new JoueurRepositoryImpl();
     }
     
     
@@ -132,6 +139,72 @@ public class MatchService {
             matchTennis.getScore().setSet4((byte)0);
             matchTennis.getScore().setSet5((byte)0);
             
+            tx.commit();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
+    public void create(MatchTennisDto matchTennisDto){
+        Session session = null;
+        Transaction tx = null;
+//        MatchTennis matchTennis = null;
+//        MatchTennisDto matchTennisDto = new MatchTennisDto();
+        
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            
+            MatchTennis matchTennis = new MatchTennis();
+            matchTennis.setEpreuve(epreuveRepositoryImpl.readOne(matchTennisDto.getId()));
+            matchTennis.setFinaliste(joueurRepositoryImpl.readOne(matchTennisDto.getFinaliste().getId()));
+            matchTennis.setVainqueur(joueurRepositoryImpl.readOne(matchTennisDto.getVainqueur().getId()));
+            
+            ScoreVainqueur scoreVainqueur = new ScoreVainqueur();
+            scoreVainqueur.setMatch(matchTennis);
+            matchTennis.setScore(scoreVainqueur);
+            scoreVainqueur.setSet1(matchTennisDto.getScore().getSet1());
+            scoreVainqueur.setSet2(matchTennisDto.getScore().getSet2());
+            scoreVainqueur.setSet3(matchTennisDto.getScore().getSet3());
+            scoreVainqueur.setSet4(matchTennisDto.getScore().getSet4());
+            scoreVainqueur.setSet5(matchTennisDto.getScore().getSet5());
+            
+            session.persist(matchTennis);
+            
+            tx.commit();
+
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+    }
+    
+    public void delete(Long id) {
+        Session session = null;
+        Transaction tx = null;
+//        MatchTennis matchTennis = null;
+//        MatchTennisDto matchTennisDto = new MatchTennisDto();
+        
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            matchRepositoryImpl.deleteById(id);
             tx.commit();
 
         } catch (Throwable t) {

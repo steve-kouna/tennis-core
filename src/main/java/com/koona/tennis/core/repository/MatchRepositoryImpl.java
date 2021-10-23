@@ -56,5 +56,16 @@ public class MatchRepositoryImpl {
         
         return matchTennis;
     }
+    
+    public void deleteById(Long id) {
+        
+        Session session = null;
+        session = HibernateUtil.getSessionFactory().getCurrentSession();
+        MatchTennis matchTennis = this.getById(id);
+        matchTennis.setId(id);
 
+        session.delete(matchTennis);
+        
+        System.out.println("Match de Tennis supprime");
+    }
 }

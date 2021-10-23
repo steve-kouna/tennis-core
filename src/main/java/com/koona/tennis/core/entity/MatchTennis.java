@@ -1,5 +1,6 @@
 package com.koona.tennis.core.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -35,7 +36,7 @@ public class MatchTennis {
     @JoinColumn(name = "id_finaliste")
     private Joueur finaliste;
     
-    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "match", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private ScoreVainqueur score;
 
     public Long getId() {
