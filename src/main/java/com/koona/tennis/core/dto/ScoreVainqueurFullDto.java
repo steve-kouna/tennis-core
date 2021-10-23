@@ -3,50 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.koona.tennis.core.entity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+package com.koona.tennis.core.dto;
 
 /**
  *
  * @author Steve KOUNA
  */
-@Entity
-@Table(name="score_vainqueur")
-public class ScoreVainqueur {
-    
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ScoreVainqueurFullDto {
     private Long id;
-    
-    @Column(name="set_1")
     private Byte set1;
-    
-    @Column(name="set_2")
     private Byte set2;
-    
-    @Column(name="set_3", nullable = true)
     private Byte set3;
-    
-    @Column(name="set_4", nullable = true)
     private Byte set4;
-    
-    @Column(name="set_5", nullable = true)
     private Byte set5;
-    
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_match")
-    private MatchTennis match;
+    private MatchTennisDto match;
 
     public Long getId() {
         return id;
@@ -96,13 +66,12 @@ public class ScoreVainqueur {
         this.set5 = set5;
     }
 
-    public MatchTennis getMatch() {
+    public MatchTennisDto getMatch() {
         return match;
     }
 
-    public void setMatch(MatchTennis match) {
+    public void setMatch(MatchTennisDto match) {
         this.match = match;
     }
-    
     
 }

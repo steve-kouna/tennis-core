@@ -6,8 +6,10 @@
 package com.koona.tennis.core.service;
 
 import com.koona.tennis.core.HibernateUtil;
+import com.koona.tennis.core.dto.EpreuveFullDto;
 import com.koona.tennis.core.dto.JoueurDto;
 import com.koona.tennis.core.dto.MatchTennisDto;
+import com.koona.tennis.core.dto.TournoiDto;
 import com.koona.tennis.core.entity.MatchTennis;
 import com.koona.tennis.core.repository.MatchRepositoryImpl;
 import com.koona.tennis.core.repository.ScoreVainqueurRepositoryImpl;
@@ -59,10 +61,23 @@ public class MatchService {
             finaliste.setNom(matchTennis.getFinaliste().getNom());
             finaliste.setPrenom(matchTennis.getFinaliste().getPrenom());
             finaliste.setSexe(matchTennis.getFinaliste().getSexe());
-           
+            
+            EpreuveFullDto epreuveDto = new EpreuveFullDto();
+            epreuveDto.setId(matchTennis.getEpreuve().getId());
+            epreuveDto.setAnnee(matchTennis.getEpreuve().getAnnee());
+            epreuveDto.setTypeEpreuve(matchTennis.getEpreuve().getTypeEpreuve());
+            
+            TournoiDto tournoiDto = new TournoiDto();
+            tournoiDto.setId(matchTennis.getEpreuve().getTournoi().getId());
+            tournoiDto.setCode(matchTennis.getEpreuve().getTournoi().getCode());
+            tournoiDto.setNom(matchTennis.getEpreuve().getTournoi().getNom());
+            
+            
+           epreuveDto.setTournoi(tournoiDto);
             
             matchTennisDto.setVainqueur(vainqueur);
             matchTennisDto.setFinaliste(finaliste);
+            matchTennisDto.setEpreuve(epreuveDto);
                     
             tx.commit();
 

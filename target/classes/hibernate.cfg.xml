@@ -37,6 +37,9 @@
 		<!-- Enities to map -->
         <mapping class="com.koona.tennis.core.entity.Joueur" />
         <mapping class="com.koona.tennis.core.entity.Tournoi" />
+        <mapping class="com.koona.tennis.core.entity.Epreuve" />
+        <mapping class="com.koona.tennis.core.entity.ScoreVainqueur" />
+        <mapping class="com.koona.tennis.core.entity.MatchTennis" />
 		<!-- mapping class="com.mycompany.tennis.core.entity.Tournoi" /-->
 
     </session-factory>
