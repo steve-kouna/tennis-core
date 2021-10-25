@@ -6,6 +6,8 @@
 package com.koona.tennis.core.entity;
 
 import javax.persistence.*;
+import org.hibernate.annotations.NamedQuery;
+
 
 /**
  *
@@ -13,6 +15,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name="joueur")
+@NamedQuery(query = "select j from Joueur j where j.sexe=?0", name = "givenSexe")
+@NamedQuery(query = "select j from Joueur j where j.nom=?0", name = "givenName")
 public class Joueur {
     
     @Id

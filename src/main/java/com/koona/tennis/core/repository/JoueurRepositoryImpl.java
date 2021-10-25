@@ -103,7 +103,7 @@ public class JoueurRepositoryImpl {
     public List<Joueur> readAll(char sexe) {
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Query<Joueur> query =  session.createQuery("select j from Joueur j where j.sexe=?0", Joueur.class);
+        Query<Joueur> query =  session.createNamedQuery("givenSexe", Joueur.class);
         query.setParameter(0, sexe);
         List<Joueur> joueurs = query.getResultList();
         
