@@ -1,5 +1,6 @@
 package com.koona.tennis.core.service;
 
+import com.koona.tennis.core.EntityManagerHolder;
 import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.dto.EpreuveFullDto;
 import com.koona.tennis.core.dto.EpreuveLightDto;
@@ -11,6 +12,8 @@ import com.koona.tennis.core.repository.EpreuveRepositoryImpl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -165,12 +168,14 @@ public class EpreuveService {
     }
 
     public List<EpreuveFullDto> getAll(String code) {
-        Session session = null;
-        Transaction tx = null;
+        EntityManager em = null;
+        EntityTransaction tx = null;
         List<EpreuveFullDto> epreuveFullDtos = new ArrayList<>();
         try {
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            tx = session.beginTransaction();
+            em = new EntityManagerHolder().getCurrentEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            
             List<Epreuve> epreuves = epreuveRepositoryImpl.readAll(code);
             for (Epreuve epreuve : epreuves) {
                 final EpreuveFullDto epreuveDto = new EpreuveFullDto();
@@ -188,6 +193,7 @@ public class EpreuveService {
                 epreuveFullDtos.add(epreuveDto);
             }
             tx.commit();
+            
         } catch (Throwable t) {
             t.printStackTrace();
             if (tx != null) {
@@ -195,8 +201,8 @@ public class EpreuveService {
             }
 
         } finally {
-            if (session != null) {
-                session.close();
+            if (em != null) {
+                em.close();
             }
         }
         return epreuveFullDtos;

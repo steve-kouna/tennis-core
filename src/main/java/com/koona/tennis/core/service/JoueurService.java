@@ -1,11 +1,14 @@
 package com.koona.tennis.core.service;
 
+import com.koona.tennis.core.EntityManagerHolder;
 import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.dto.JoueurDto;
 import com.koona.tennis.core.entity.Joueur;
 import com.koona.tennis.core.repository.JoueurRepositoryImpl;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -138,12 +141,14 @@ public class JoueurService {
     }
     
     public List<JoueurDto> getAll(char sexe){
-        Session session = null;
-        Transaction tx = null;
+        EntityManager em = null;
+        EntityTransaction tx = null;
         List<JoueurDto> joueurDtos = new ArrayList<>();
         try {
-            session = HibernateUtil.getSessionFactory().getCurrentSession();
-            tx = session.beginTransaction();
+            em = new EntityManagerHolder().getCurrentEntityManager();
+            tx = em.getTransaction();
+            tx.begin();
+            
             List<Joueur> joueurs = joueurRepositoryImpl.readAll(sexe);
             for (Joueur joueur: joueurs){
                 final JoueurDto joueurDto = new JoueurDto();
@@ -155,6 +160,7 @@ public class JoueurService {
                 joueurDtos.add(joueurDto);
             }
             tx.commit();
+         
         } catch (Throwable t) {
             t.printStackTrace();
             if (tx != null) {
@@ -162,8 +168,8 @@ public class JoueurService {
             }
 
         } finally {
-            if (session != null) {
-                session.close();
+            if (em != null) {
+                em.close();
             }
         }
         return joueurDtos;

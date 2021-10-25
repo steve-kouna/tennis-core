@@ -1,12 +1,13 @@
 package com.koona.tennis.core.repository;
 
 import com.koona.tennis.core.DataSourceProvider;
+import com.koona.tennis.core.EntityManagerHolder;
 import com.koona.tennis.core.HibernateUtil;
 import com.koona.tennis.core.entity.Joueur;
 import java.sql.*;
 import java.util.*;
+import javax.persistence.*;
 import javax.sql.*;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -102,8 +103,9 @@ public class JoueurRepositoryImpl {
 
     public List<Joueur> readAll(char sexe) {
 
-        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Query<Joueur> query =  session.createNamedQuery("givenSexe", Joueur.class);
+//        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        EntityManager em = new EntityManagerHolder().getCurrentEntityManager();
+        TypedQuery<Joueur> query =  em.createNamedQuery("givenSexe", Joueur.class);
         query.setParameter(0, sexe);
         List<Joueur> joueurs = query.getResultList();
         

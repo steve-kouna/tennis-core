@@ -6,7 +6,6 @@
 package com.koona.tennis.core.entity;
 
 import javax.persistence.*;
-import org.hibernate.annotations.NamedQuery;
 
 
 /**
