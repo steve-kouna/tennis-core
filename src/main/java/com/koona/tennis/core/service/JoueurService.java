@@ -1,8 +1,11 @@
 package com.koona.tennis.core.service;
 
 import com.koona.tennis.core.HibernateUtil;
+import com.koona.tennis.core.dto.JoueurDto;
 import com.koona.tennis.core.entity.Joueur;
 import com.koona.tennis.core.repository.JoueurRepositoryImpl;
+import java.util.ArrayList;
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -133,5 +136,37 @@ public class JoueurService {
             }
         }
     }
+    
+    public List<JoueurDto> getAll(){
+        Session session = null;
+        Transaction tx = null;
+        List<JoueurDto> joueurDtos = new ArrayList<>();
+        try {
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tx = session.beginTransaction();
+            List<Joueur> joueurs = joueurRepositoryImpl.readAll();
+            for (Joueur joueur: joueurs){
+                final JoueurDto joueurDto = new JoueurDto();
+                joueurDto.setId(joueur.getId());
+                joueurDto.setNom(joueur.getNom());
+                joueurDto.setPrenom(joueur.getPrenom());
+                joueurDto.setSexe(joueur.getSexe());
+                
+                joueurDtos.add(joueurDto);
+            }
+            tx.commit();
+        } catch (Throwable t) {
+            t.printStackTrace();
+            if (tx != null) {
+                tx.rollback();
+            }
 
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return joueurDtos;
+    }
+    
 }

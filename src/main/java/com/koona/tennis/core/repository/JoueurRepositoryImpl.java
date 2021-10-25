@@ -6,6 +6,7 @@ import com.koona.tennis.core.entity.Joueur;
 import java.sql.*;
 import java.util.*;
 import javax.sql.*;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -100,38 +101,13 @@ public class JoueurRepositoryImpl {
     }
 
     public List<Joueur> readAll() {
-        List<Joueur> joueurs = new ArrayList();
-        Connection connection = null;
-        try {
-            DataSource dataSource = DataSourceProvider.getSingleDtaSourceInstance();
-            connection = dataSource.getConnection();
 
-            String sqls = "SELECT * FROM JOUEUR";
-            PreparedStatement preparedStatement = connection.prepareStatement(sqls);
-
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                Joueur joueur = new Joueur();
-                joueur.setNom(rs.getString("NOM"));
-                joueur.setPrenom(rs.getString("PRENOM"));
-                joueur.setSexe(rs.getString("SEXE").charAt(0));
-                joueur.setId(rs.getLong("ID"));
-                joueurs.add(joueur);
-            }
-
-            System.out.println("Joueur modifie");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        Session session = HibernateUtil.getSessionFactory().getCurrentSession();
+        Query<Joueur> query =  session.createQuery("select j from Joueur j", Joueur.class);
+        List<Joueur> joueurs = query.getResultList();
+        
+        System.out.println("Joueurs lus");
+        
         return joueurs;
     }
 
