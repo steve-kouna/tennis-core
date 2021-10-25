@@ -100,10 +100,11 @@ public class JoueurRepositoryImpl {
         session.delete(joueur);
     }
 
-    public List<Joueur> readAll() {
+    public List<Joueur> readAll(char sexe) {
 
         Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-        Query<Joueur> query =  session.createQuery("select j from Joueur j", Joueur.class);
+        Query<Joueur> query =  session.createQuery("select j from Joueur j where j.sexe=?0", Joueur.class);
+        query.setParameter(0, sexe);
         List<Joueur> joueurs = query.getResultList();
         
         System.out.println("Joueurs lus");

@@ -137,14 +137,14 @@ public class JoueurService {
         }
     }
     
-    public List<JoueurDto> getAll(){
+    public List<JoueurDto> getAll(char sexe){
         Session session = null;
         Transaction tx = null;
         List<JoueurDto> joueurDtos = new ArrayList<>();
         try {
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             tx = session.beginTransaction();
-            List<Joueur> joueurs = joueurRepositoryImpl.readAll();
+            List<Joueur> joueurs = joueurRepositoryImpl.readAll(sexe);
             for (Joueur joueur: joueurs){
                 final JoueurDto joueurDto = new JoueurDto();
                 joueurDto.setId(joueur.getId());
